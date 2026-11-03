@@ -76,4 +76,18 @@ JOIN tests t
 JOIN test_results tr
     ON tr.test_id = t.id
 GROUP BY b.batch
-ORDER BY taxa_aprovacao DESC;
+ORDER BY taxa_aprovacao DESC;-- =====================================================
+-- 6. Principais motivos de reprovação
+-- =====================================================
+
+SELECT
+    rejection_reason,
+    COUNT(*) AS total_reprovacoes,
+    ROUND(
+        COUNT(*) * 100.0 / SUM(COUNT(*)) OVER (),
+        2
+    ) AS percentual
+FROM test_results
+WHERE result = 'REJECTED'
+GROUP BY rejection_reason
+ORDER BY total_reprovacoes DESC;
